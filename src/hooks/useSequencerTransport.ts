@@ -28,6 +28,7 @@ export function useSequencerTransport({
   const gridRef = useRef(grid);
   const playSoundRef = useRef(playSound);
   const instrumentsRef = useRef(instruments);
+  const currentStepRef = useRef(0);
 
   // Update refs when dependencies change
   useEffect(() => {
@@ -44,12 +45,11 @@ export function useSequencerTransport({
 
   // Set up Transport scheduling
   useEffect(() => {
-    let currentStep = 0;
-
     const eventId = Tone.Transport.scheduleRepeat(() => {
+      const step = currentStepRef.current;
       // Check each instrument row for the current step
       gridRef.current.forEach((row, rowIndex) => {
-        if (row[currentStep]) {
+        if (row[step]) {
           // Schedule the sample to be played at the correct time
           const instrument = instrumentsRef.current[rowIndex];
           playSoundRef.current(instrument);
@@ -57,9 +57,9 @@ export function useSequencerTransport({
       });
 
       // Update step
-      onStepChange(currentStep);
+      onStepChange(step);
       // Advance to next step
-      currentStep = (currentStep + 1) % 16;
+      currentStepRef.current = (step + 1) % 16;
     }, "16n");
 
     return () => {
@@ -73,6 +73,8 @@ export function useSequencerTransport({
       Tone.Transport.start();
     } else {
       Tone.Transport.stop();
+      currentStepRef.current = 0;
+      onStepChange(0); // Reset step to 0 when stopped
     }
   }, [isPlaying]);
 

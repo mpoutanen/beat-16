@@ -31,7 +31,33 @@
 }
 
 .player-controls {
-  display: flex;
+  display: grid;
   justify-content: center;
   margin-top: 16px;
+}
+
+.playhead-container {
+  justify-content: center;
+  margin-bottom: 16px;
+  display: grid;
+  grid-template-columns: 100px repeat(16, 1fr);
+  gap: 16px;
+}
+.playhead-cell {
+  z-index: 1;
+  &.playhead-active {
+    position: relative;
+  }
+  &.playhead-active:after {
+    background-color: cyan;
+    border: 2px solid darkcyan;
+    border-radius: 6px;
+    content: "";
+    position: absolute;
+    top: 0px;
+    left: -2px;
+    width: 100%;
+    height: 4px;
+    opacity: 1;
+  }
 }
