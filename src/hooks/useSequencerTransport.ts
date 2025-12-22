@@ -14,6 +14,7 @@ interface UseSequencerTransportProps {
   isPlaying: boolean;
   playSound: (instrument: string) => void;
   onStepChange: (step: number) => void;
+  swing: number;
 }
 
 export function useSequencerTransport({
@@ -23,6 +24,7 @@ export function useSequencerTransport({
   isPlaying,
   bpm,
   onStepChange,
+  swing,
 }: UseSequencerTransportProps) {
   // Refs to keep track of current values in the interval
   const gridRef = useRef(grid);
@@ -77,6 +79,12 @@ export function useSequencerTransport({
       onStepChange(0); // Reset step to 0 when stopped
     }
   }, [isPlaying]);
+
+  // Update swing (to make beat feel more "human")
+  useEffect(() => {
+    Tone.Transport.swing = swing / 100; // Convert percentage to decimal
+    console.log(swing / 100);
+  }, [swing]);
 
   // Update tempo
   useEffect(() => {

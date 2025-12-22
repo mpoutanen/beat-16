@@ -21,6 +21,7 @@ function Player() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [currentBpm, setCurrentBpm] = useState(80);
+  const [currentSwing, setCurrentSwing] = useState(0);
   const { grid, toggleStep, clearGrid } = useSequencerGrid();
 
   const handleStepChange = useCallback((step: number) => {
@@ -34,6 +35,7 @@ function Player() {
     isPlaying,
     playSound,
     onStepChange: handleStepChange,
+    swing: currentSwing,
   });
 
   useEffect(() => {
@@ -59,13 +61,18 @@ function Player() {
             className={`playhead-cell${
               i === currentStep ? " playhead-active" : ""
             }`}
-          />
+          >
+            {i + 1}
+          </div>
         ))}
       </div>
       <div className="sequencer-grid">
         {INSTRUMENTS.map((instrument, index) => (
           <Fragment key={instrument}>
-            <div className="instrument-label" key={`${instrument}-label`}>
+            <div
+              className={`instrument-label ${instrument}`}
+              key={`${instrument}-label`}
+            >
               {instrument}
             </div>
             {grid[index].map((isActive, stepIndex) => (
@@ -95,6 +102,16 @@ function Player() {
             max="200"
             value={currentBpm}
             onChange={(e) => setCurrentBpm(Number(e.target.value))}
+          />
+        </label>
+        <label>
+          <span>Swing: </span> {currentSwing}
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value={currentSwing}
+            onChange={(e) => setCurrentSwing(Number(e.target.value))}
           />
         </label>
       </div>
