@@ -53,7 +53,7 @@ function Player() {
       <h1>Beat 16 - More Cowbell edition!</h1>
       <div className="playhead-container">
         <span></span>
-        {Array.from({ length: 16 }).map((_, i) => (
+        {Array.from({ length: grid[0].length }).map((_, i) => (
           <div
             key={i}
             className={`playhead-cell${
@@ -71,7 +71,9 @@ function Player() {
             {grid[index].map((isActive, stepIndex) => (
               <button
                 key={`${instrument}-${stepIndex}`}
-                className={`${isActive ? "active" : ""} step-button`}
+                className={`${
+                  isActive ? "active" : ""
+                } ${instrument} step-button`}
                 onClick={() => toggleStep(index, stepIndex)}
               ></button>
             ))}
