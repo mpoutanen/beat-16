@@ -1,3 +1,7 @@
+/**
+ * Custom hook to manage audio playback using Tone.js
+ */
+
 import * as Tone from "tone";
 import { useRef, useCallback } from "react";
 
