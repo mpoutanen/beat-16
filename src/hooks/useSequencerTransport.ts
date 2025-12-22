@@ -46,7 +46,7 @@ export function useSequencerTransport({
   useEffect(() => {
     let currentStep = 0;
 
-    const eventId = Tone.Transport.scheduleRepeat((time) => {
+    const eventId = Tone.Transport.scheduleRepeat(() => {
       // Check each instrument row for the current step
       gridRef.current.forEach((row, rowIndex) => {
         if (row[currentStep]) {

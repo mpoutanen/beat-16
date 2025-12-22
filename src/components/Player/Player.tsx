@@ -1,4 +1,4 @@
-import { useState, Fragment } from "react";
+import { useState, Fragment, useCallback } from "react";
 import useAudioEngine from "../../hooks/useAudioEngine";
 import { useSequencerGrid, INSTRUMENTS } from "./playerReducer";
 import { useSequencerTransport } from "../../hooks/useSequencerTransport";
@@ -12,18 +12,23 @@ function Player() {
   const [currentBpm, setCurrentBpm] = useState(120);
   const { grid, toggleStep, clearGrid } = useSequencerGrid();
 
+  const handleStepChange = useCallback((step: number) => {
+    setCurrentStep(step);
+  }, []);
+
   useSequencerTransport({
     grid,
     instruments: INSTRUMENTS,
     bpm: currentBpm,
     isPlaying,
     playSound,
-    onStepChange: (step) => setCurrentStep(step),
+    onStepChange: handleStepChange,
   });
 
   return (
     <>
       <h1>Beat 16 - More Cowbell edition!</h1>
+      {currentStep}
       <div className="sequencer-grid">
         {INSTRUMENTS.map((instrument, index) => (
           <Fragment key={instrument}>
