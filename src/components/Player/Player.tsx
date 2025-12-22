@@ -1,6 +1,7 @@
 import { useState, Fragment } from "react";
 import useAudioEngine from "../../hooks/useAudioEngine";
 import { useSequencerGrid, INSTRUMENTS } from "./playerReducer";
+import { useSequencerTransport } from "../../hooks/useSequencerTransport";
 import "./Player.css";
 
 function Player() {
@@ -9,10 +10,16 @@ function Player() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [currentBpm, setCurrentBpm] = useState(120);
-
-  useEffect(() => {}, [isPlaying]);
-
   const { grid, toggleStep, clearGrid } = useSequencerGrid();
+
+  useSequencerTransport({
+    grid,
+    instruments: INSTRUMENTS,
+    bpm: currentBpm,
+    isPlaying,
+    playSound,
+    onStepChange: (step) => setCurrentStep(step),
+  });
 
   return (
     <>
@@ -38,6 +45,16 @@ function Player() {
           {isPlaying ? "Stop" : "Play"}
         </button>
         <button onClick={clearGrid}>Clear Grid</button>
+        <label>
+          BPM: {currentBpm}
+          <input
+            type="range"
+            min="60"
+            max="200"
+            value={currentBpm}
+            onChange={(e) => setCurrentBpm(Number(e.target.value))}
+          />
+        </label>
       </div>
     </>
   );
