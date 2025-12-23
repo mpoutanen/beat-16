@@ -18,7 +18,7 @@ Simple 16 step sequencer pulled together with React and [Tone.js](https://tonejs
          │
     ┌────┴────────────────────┐
     │                         │
-┌───▼──────────────┐  ┌──────▼─────────────-─┐
+┌───▼──────────────┐  ┌───────▼──────────────┐
 │ useSequencerGrid │  │ useSequencerTransport│
 │  (state logic)   │  │  (timing/playback)   │
 └──────────────────┘  └──────┬───────────────┘

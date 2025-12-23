@@ -47,7 +47,7 @@ export function useSequencerTransport({
 
   // Set up Transport scheduling
   useEffect(() => {
-    const eventId = Tone.Transport.scheduleRepeat(() => {
+    const eventId = Tone.getTransport().scheduleRepeat(() => {
       const step = currentStepRef.current;
       // Check each instrument row for the current step
       gridRef.current.forEach((row, rowIndex) => {
@@ -65,16 +65,16 @@ export function useSequencerTransport({
     }, "16n");
 
     return () => {
-      Tone.Transport.clear(eventId);
+      Tone.getTransport().clear(eventId);
     };
   }, [onStepChange]);
 
   // Handle play/stop
   useEffect(() => {
     if (isPlaying) {
-      Tone.Transport.start();
+      Tone.getTransport().start();
     } else {
-      Tone.Transport.stop();
+      Tone.getTransport().stop();
       currentStepRef.current = 0;
       onStepChange(0); // Reset step to 0 when stopped
     }
@@ -82,12 +82,12 @@ export function useSequencerTransport({
 
   // Update swing (to make beat feel more "human")
   useEffect(() => {
-    Tone.Transport.swing = swing / 100; // Convert percentage to decimal
+    Tone.getTransport().swing = swing / 100; // Convert percentage to decimal
     console.log(swing / 100);
   }, [swing]);
 
   // Update tempo
   useEffect(() => {
-    Tone.Transport.bpm.value = bpm;
+    Tone.getTransport().bpm.value = bpm;
   }, [bpm]);
 }
