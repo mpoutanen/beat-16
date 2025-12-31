@@ -4,11 +4,12 @@
  * @toggleStep Toggles the state of a specific step in the grid.
  */
 
-import { useReducer } from "react";
+import { useReducer, useCallback } from "react";
 
 type GridAction =
   | { type: "TOGGLE_STEP"; payload: { row: number; col: number } }
-  | { type: "CLEAR" };
+  | { type: "CLEAR" }
+  | { type: "SET_GRID"; payload: boolean[][] };
 type State = boolean[][];
 
 export const INSTRUMENTS = ["kick", "snare", "hihat", "cowbell"] as const;
@@ -29,7 +30,10 @@ function gridReducer(state: State, action: GridAction): boolean[][] {
     }
 
     case "CLEAR":
-      return state.map((row) => row.map(() => false));
+      return initialGrid;
+
+    case "SET_GRID":
+      return action.payload;
 
     default:
       return state;
@@ -47,5 +51,9 @@ export function useSequencerGrid() {
     dispatch({ type: "CLEAR" });
   };
 
-  return { grid, toggleStep, clearGrid };
+  const setGrid = useCallback((newGrid: boolean[][]) => {
+    dispatch({ type: "SET_GRID", payload: newGrid });
+  }, []);
+
+  return { grid, toggleStep, clearGrid, setGrid };
 }

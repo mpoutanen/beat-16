@@ -1,8 +1,9 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, use } from "react";
 import useAudioEngine from "../../hooks/useAudioEngine";
 import { useSequencerGrid, INSTRUMENTS } from "../../hooks/usePlayerReducer";
 import { useSequencerTransport } from "../../hooks/useSequencerTransport";
 import { useKeyPress } from "../../hooks/useKeyPress";
+import { useLocalStorage } from "../../hooks/useLocalStorage";
 import "./Player.css";
 import Playhead from "../Playhead/Playhead";
 import Grid from "../Grid/Grid";
@@ -15,8 +16,32 @@ function Player() {
   const [currentStep, setCurrentStep] = useState(0);
   const [currentBpm, setCurrentBpm] = useState(80);
   const [currentSwing, setCurrentSwing] = useState(0);
-  const { grid, toggleStep, clearGrid } = useSequencerGrid();
+  const { grid, toggleStep, clearGrid, setGrid } = useSequencerGrid();
+  const storage = useLocalStorage<boolean[][]>(
+    "beat-16-sequencer-pattern",
+    grid
+  );
 
+  const handleSave = useCallback(() => {
+    storage.save(grid);
+    console.log("Pattern saved to local storage.");
+  }, [grid, storage]);
+
+  const handleLoad = useCallback(() => {
+    const loadedGrid = storage.load();
+    if (Array.isArray(loadedGrid) && loadedGrid.length) {
+      setGrid(loadedGrid);
+    }
+    console.log("Pattern loaded from local storage.");
+  }, [storage, setGrid]);
+
+  const handleClearStorage = useCallback(() => {
+    storage.clear();
+    clearGrid();
+    console.log("Pattern cleared from local storage and grid reset.");
+  }, [storage, clearGrid]);
+
+  // Clear current grid
   const handleStepChange = useCallback((step: number) => {
     setCurrentStep(step);
   }, []);
@@ -66,6 +91,9 @@ function Player() {
         currentSwing={currentSwing}
         setCurrentSwing={setCurrentSwing}
         clearGrid={clearGrid}
+        savePattern={handleSave}
+        loadPattern={handleLoad}
+        clearPattern={handleClearStorage}
       />
     </>
   );

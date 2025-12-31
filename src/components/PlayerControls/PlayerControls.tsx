@@ -6,6 +6,9 @@ interface PlayerControlsProps {
   currentSwing: number;
   setCurrentSwing: (swing: number) => void;
   clearGrid: () => void;
+  savePattern: () => void;
+  loadPattern: () => void;
+  clearPattern: () => void;
 }
 
 function PlayerControls({
@@ -16,6 +19,9 @@ function PlayerControls({
   currentSwing,
   setCurrentSwing,
   clearGrid,
+  savePattern,
+  loadPattern,
+  clearPattern: deletePattern,
 }: PlayerControlsProps) {
   return (
     <div className="player-controls">
@@ -24,6 +30,11 @@ function PlayerControls({
           {isPlaying ? "Stop" : "Play"}
         </button>
         <button onClick={clearGrid}>Clear Grid</button>
+        <div>
+          <button onClick={savePattern}>Save Pattern</button>
+          <button onClick={loadPattern}>Load Pattern</button>
+          <button onClick={deletePattern}>Delete Pattern</button>
+        </div>
       </div>
       <label>
         <span>BPM: </span> {currentBpm}
