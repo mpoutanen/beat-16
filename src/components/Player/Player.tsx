@@ -1,22 +1,12 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import useAudioEngine from "../../hooks/useAudioEngine";
 import { useSequencerGrid, INSTRUMENTS } from "../../hooks/usePlayerReducer";
 import { useSequencerTransport } from "../../hooks/useSequencerTransport";
+import { useKeyPress } from "../../hooks/useKeyPress";
 import "./Player.css";
 import Playhead from "../Playhead/Playhead";
 import Grid from "../Grid/Grid";
 import PlayerControls from "../PlayerControls/PlayerControls";
-
-function handleSpacebarPress(
-  event: KeyboardEvent,
-  isPlaying: boolean,
-  setIsPlaying: (playing: boolean) => void
-) {
-  if (event.code === "Space") {
-    event.preventDefault();
-    setIsPlaying(!isPlaying);
-  }
-}
 
 function Player() {
   const { playSound } = useAudioEngine();
@@ -41,17 +31,7 @@ function Player() {
     swing: currentSwing,
   });
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      handleSpacebarPress(e, isPlaying, setIsPlaying);
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [isPlaying, setIsPlaying]);
+  useKeyPress("Space", () => setIsPlaying(!isPlaying));
 
   return (
     <>

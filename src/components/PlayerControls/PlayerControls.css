@@ -1,0 +1,11 @@
+.player-controls {
+  display: grid;
+  justify-content: center;
+  margin-top: 16px;
+  gap: 16px;
+
+  > :first-child {
+    display: flex;
+    justify-content: space-between;
+  }
+}
