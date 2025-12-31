@@ -31,6 +31,7 @@ export function useSequencerTransport({
   const playSoundRef = useRef(playSound);
   const instrumentsRef = useRef(instruments);
   const currentStepRef = useRef(0);
+  const isPlayingRef = useRef(isPlaying);
 
   // Update refs when dependencies change
   useEffect(() => {
@@ -45,9 +46,14 @@ export function useSequencerTransport({
     instrumentsRef.current = instruments;
   }, [instruments]);
 
+  useEffect(() => {
+    isPlayingRef.current = isPlaying;
+  }, [isPlaying]);
+
   // Set up Transport scheduling
   useEffect(() => {
     const eventId = Tone.getTransport().scheduleRepeat(() => {
+      if (!isPlayingRef.current) return;
       const step = currentStepRef.current;
       // Check each instrument row for the current step
       gridRef.current.forEach((row, rowIndex) => {

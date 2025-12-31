@@ -1,8 +1,11 @@
-import { useState, Fragment, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect } from "react";
 import useAudioEngine from "../../hooks/useAudioEngine";
-import { useSequencerGrid, INSTRUMENTS } from "./playerReducer";
+import { useSequencerGrid, INSTRUMENTS } from "../../hooks/usePlayerReducer";
 import { useSequencerTransport } from "../../hooks/useSequencerTransport";
 import "./Player.css";
+import Playhead from "../Playhead/Playhead";
+import Grid from "../Grid/Grid";
+import PlayerControls from "../PlayerControls/PlayerControls";
 
 function handleSpacebarPress(
   event: KeyboardEvent,
@@ -53,68 +56,17 @@ function Player() {
   return (
     <>
       <h1>Beat 16 - More Cowbell edition!</h1>
-      <div className="playhead-container">
-        <span></span>
-        {Array.from({ length: grid[0].length }).map((_, i) => (
-          <div
-            key={i}
-            className={`playhead-cell${
-              i === currentStep ? " playhead-active" : ""
-            }`}
-          >
-            {i + 1}
-          </div>
-        ))}
-      </div>
-      <div className="sequencer-grid">
-        {INSTRUMENTS.map((instrument, index) => (
-          <Fragment key={instrument}>
-            <div
-              className={`instrument-label ${instrument}`}
-              key={`${instrument}-label`}
-            >
-              {instrument}
-            </div>
-            {grid[index].map((isActive, stepIndex) => (
-              <button
-                key={`${instrument}-${stepIndex}`}
-                className={`${
-                  isActive ? "active" : ""
-                } ${instrument} step-button`}
-                onClick={() => toggleStep(index, stepIndex)}
-              ></button>
-            ))}
-          </Fragment>
-        ))}
-      </div>
-      <div className="player-controls">
-        <div>
-          <button onClick={() => setIsPlaying(!isPlaying)}>
-            {isPlaying ? "Stop" : "Play"}
-          </button>
-          <button onClick={clearGrid}>Clear Grid</button>
-        </div>
-        <label>
-          <span>BPM: </span> {currentBpm}
-          <input
-            type="range"
-            min="60"
-            max="200"
-            value={currentBpm}
-            onChange={(e) => setCurrentBpm(Number(e.target.value))}
-          />
-        </label>
-        <label>
-          <span>Swing: </span> {currentSwing}
-          <input
-            type="range"
-            min="0"
-            max="100"
-            value={currentSwing}
-            onChange={(e) => setCurrentSwing(Number(e.target.value))}
-          />
-        </label>
-      </div>
+      <Playhead length={grid[0].length} currentStep={currentStep} />
+      <Grid grid={grid} toggleStep={toggleStep} />
+      <PlayerControls
+        isPlaying={isPlaying}
+        setIsPlaying={setIsPlaying}
+        currentBpm={currentBpm}
+        setCurrentBpm={setCurrentBpm}
+        currentSwing={currentSwing}
+        setCurrentSwing={setCurrentSwing}
+        clearGrid={clearGrid}
+      />
     </>
   );
 }

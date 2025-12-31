@@ -40,3 +40,10 @@
 .read-the-docs {
   color: #888;
 }
+
+:root {
+  --kick-color: #4deeea;
+  --snare-color: #74ee15;
+  --hihat-color: #ffe700;
+  --cowbell-color: #f000ff;
+}
