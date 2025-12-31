@@ -15,6 +15,7 @@ interface UseSequencerTransportProps {
   playSound: (instrument: string) => void;
   onStepChange: (step: number) => void;
   swing: number;
+  startStep?: number;
 }
 
 export function useSequencerTransport({
@@ -25,6 +26,7 @@ export function useSequencerTransport({
   bpm,
   onStepChange,
   swing,
+  startStep,
 }: UseSequencerTransportProps) {
   // Refs to keep track of current values in the interval
   const gridRef = useRef(grid);
@@ -49,6 +51,12 @@ export function useSequencerTransport({
   useEffect(() => {
     isPlayingRef.current = isPlaying;
   }, [isPlaying]);
+
+  useEffect(() => {
+    if (!isPlaying) {
+      currentStepRef.current = startStep ?? 0;
+    }
+  });
 
   // Set up Transport scheduling
   useEffect(() => {
@@ -81,8 +89,8 @@ export function useSequencerTransport({
       Tone.getTransport().start();
     } else {
       Tone.getTransport().stop();
-      currentStepRef.current = 0;
-      onStepChange(0); // Reset step to 0 when stopped
+      // currentStepRef.current = 0;
+      onStepChange(currentStepRef.current); // Reset step to 0 when stopped
     }
   }, [isPlaying]);
 
